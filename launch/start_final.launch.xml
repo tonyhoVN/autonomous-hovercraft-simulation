@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+    <include file="$(find-pkg-share gazebo_ros)/launch/gzclient.launch.py">
+    </include>
+    <include file="$(find-pkg-share gazebo_ros)/launch/gzserver.launch.py">
+        <arg name="world" value="$(find-pkg-share final_student)/worlds/Final_2023.world"/>
+        <arg name="pause" value = "false"/>
+        <arg name="use_sim_time" value = "true"/>
+    </include>
+
+    <node pkg="gazebo_ros" exec='spawn_entity.py' output="log" name="spawner" args="-entity hover_final
+                                                                                                -file $(find-pkg-share final_student)/rsc/sdf/hover_final.sdf
+                                                                                                -x 2.50
+                                                                                                -y -14.50
+                                                                                                -z 0.326
+                                                                                                -R 0.0
+                                                                                                -P 0.0
+                                                                                                -Y 3.141592">
+    </node>
+
+    <arg name="student_num" default="20200726"/>
+    <node pkg="final_student" exec="navigate_$(var student_num)" output="log" name="Navigate$(var student_num)" respawn="true" respawn_delay="3">
+        <param name="use_sim_time" value="true"/>
+        <param name="evalPath" value="$(find-pkg-share final_student)/rsc/sdf" />
+    </node> 
+
+    <!-- <arg name="student_num" default="20200726"/>
+    <node pkg="final_student" exec="navigate_20200726" output="screen" name="Navigate20200726" respawn="true" respawn_delay="3">
+        <param name="use_sim_time" value="true"/>
+        <param name="evalPath" value="$(find-pkg-share final_student)/rsc/sdf" />
+    </node> -->
+<!--    <node pkg="final_student" exec="evaluate" output="log" name="EvaluateStudent" respawn="true" respawn_delay="3">-->
+<!--&lt;!&ndash;        <arg name="log_level" value="$(arg log_level)" />&ndash;&gt;-->
+<!--        <param name="use_sim_time" value="true"/>-->
+<!--        <param name="evalPath" value="$(find-pkg-share final_student)/rsc/sdf" />-->
+<!--    </node>-->
+                                                    
+</launch>

@@ -1,0 +1,129 @@
+<?xml version="1.0"?>
+<sdf version="1.6">
+  <world name="world">
+
+    <plugin name="gazebo_ros_state" filename="libgazebo_ros_state.so">
+      <ros>
+        <namespace>/Final</namespace>
+        <argument>model_states:=model_states_demo</argument>
+        <argument>link_states:=link_states_demo</argument>
+      </ros>
+
+      <update_rate>10.0</update_rate>
+    </plugin>
+  
+  <include>
+    <uri>model://ground_plane</uri>
+  </include>
+  <include>
+    <uri>model://sun</uri>
+  </include>
+
+  <!--<gravity>0.0 0.0 -9.81</gravity>-->
+  <physics type='ode'>
+    <max_step_size>0.001000</max_step_size>
+    <real_time_factor>1.000000</real_time_factor>
+    <real_time_update_rate>500</real_time_update_rate>
+    <gravity>0.000000 0.000000 -9.800000</gravity>
+  </physics>
+
+    <model name='spawn area'>
+        <pose>0.0 -15.0 0.01 0 0 0</pose>
+        <static>1</static>
+        <link name='goal_line'>
+            <visual name='visual'>
+                <cast_shadows>0</cast_shadows>
+                <geometry>
+                    <plane>
+                      <normal>0 0 1</normal>
+                      <size>10 5</size>
+                    </plane>
+                </geometry>
+                <material>
+                    <script>
+                      <uri>file://media/materials/scripts/gazebo.material</uri>
+                      <name>Gazebo/Blue</name>
+                    </script>
+                </material>
+            </visual>
+            <self_collide>0</self_collide>
+            <kinematic>0</kinematic>
+            <gravity>0</gravity>
+        </link>
+    </model>
+
+    <model name='goal line'>
+        <pose>0.0 10.0 0.01 0 0 0</pose>
+        <static>1</static>
+        <link name='goal_line'>
+            <visual name='visual'>
+                <cast_shadows>0</cast_shadows>
+                <geometry>
+                    <plane>
+                      <normal>0 0 1</normal>
+                      <size>20 0.05</size>
+                    </plane>
+                </geometry>
+                <material>
+                    <script>
+                      <uri>file://media/materials/scripts/gazebo.material</uri>
+                      <name>Gazebo/Red</name>
+                    </script>
+                </material>
+            </visual>
+            <self_collide>0</self_collide>
+            <kinematic>0</kinematic>
+            <gravity>0</gravity>
+        </link>
+    </model>
+
+    <model name='ground_plane1'>
+      <static>1</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>0</mu>
+                <mu2>0</mu2>
+              </ode>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name='visual'>
+          <cast_shadows>0</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/Grey</name>
+            </script>
+          </material>
+        </visual>
+        <self_collide>0</self_collide>
+        <kinematic>0</kinematic>
+        <gravity>1</gravity>
+      </link>
+    </model>
+
+  </world>
+</sdf>

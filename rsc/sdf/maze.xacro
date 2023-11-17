@@ -1,0 +1,1430 @@
+<?xml version='1.0'?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+  <!-- Define parameters -->
+  <xacro:property name="link0_w" value="link0_w"/>
+  <xacro:property name="link0_pos_x" value="link0_pos_x"/>
+  <xacro:property name="link0_pos_y" value="link0_pos_y"/>
+  <xacro:property name="link11_w" value="link11_w" />
+  <xacro:property name="link11_pos_x" value="link11_pos_x"/>
+  <xacro:property name="link11_pos_y" value="link11_pos_y"/>
+  <xacro:property name="link12_w" value="link12_w" />
+  <xacro:property name="link12_pos_x" value="link12_pos_x"/>
+  <xacro:property name="link12_pos_y" value="link12_pos_y"/>
+  <xacro:property name="link2_w" value="link2_w" />
+  <xacro:property name="link2_pos_x" value="link2_pos_x"/>
+  <xacro:property name="link2_pos_y" value="link2_pos_y"/>
+  <xacro:property name="link31_w" value="link31_w" />
+  <xacro:property name="link31_pos_x" value="link31_pos_x"/>
+  <xacro:property name="link31_pos_y" value="link31_pos_y"/>
+  <xacro:property name="link32_w" value="link32_w" />
+  <xacro:property name="link32_pos_x" value="link32_pos_x"/>
+  <xacro:property name="link32_pos_y" value="link32_pos_y"/>
+  <xacro:property name="link4_w" value="link4_w" />
+  <xacro:property name="link4_pos_x" value="link4_pos_x"/>
+  <xacro:property name="link4_pos_y" value="link4_pos_y"/>
+
+  <!-- Generate random values for link size -->
+<!--  <xacro:property name="random_x" value="$(random_uniform -1 1)"/>-->
+
+<sdf version='1.7'>
+
+  <model name='maze_1'>
+    <link name='floor'>
+      <inertial>
+        <pose>0 0 0 0 -0 0</pose>
+        <mass>1e+06</mass>
+        <inertia>
+          <ixx>1e+06</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1e+06</iyy>
+          <iyz>0</iyz>
+          <izz>1e+06</izz>
+        </inertia>
+      </inertial>
+      <self_collide>0</self_collide>
+      <enable_wind>0</enable_wind>
+      <kinematic>0</kinematic>
+      <pose>0 0 0 0 -0 0</pose>
+    </link>
+
+    <link name='wall1'>
+      <pose>9.5 0 0.5 0 -0 0</pose>
+      <inertial>
+        <pose>0 0 0 0 -0 0</pose>
+        <mass>100</mass>
+        <inertia>
+          <ixx>10</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>10</iyy>
+          <iyz>0</iyz>
+          <izz>10</izz>
+        </inertia>
+      </inertial>
+      <self_collide>0</self_collide>
+      <enable_wind>0</enable_wind>
+      <kinematic>0</kinematic>
+      <gravity>1</gravity>
+      <visual name='wall1_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <box>
+            <size>1 40 1</size>
+          </box>
+        </geometry>
+        <material>
+          <shader type='pixel'>
+            <normal_map>__default__</normal_map>
+          </shader>
+        </material>
+        <transparency>0</transparency>
+        <cast_shadows>1</cast_shadows>
+      </visual>
+      <collision name='wall1_collision'>
+        <laser_retro>0</laser_retro>
+        <max_contacts>10</max_contacts>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <box>
+            <size>1 40 1</size>
+          </box>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>1</mu>
+              <mu2>1</mu2>
+              <fdir1>0 0 0</fdir1>
+              <slip1>0</slip1>
+              <slip2>0</slip2>
+            </ode>
+            <torsional>
+              <coefficient>1</coefficient>
+              <patch_radius>0</patch_radius>
+              <surface_radius>0</surface_radius>
+              <use_patch_radius>1</use_patch_radius>
+              <ode>
+                <slip>0</slip>
+              </ode>
+            </torsional>
+          </friction>
+          <bounce>
+            <restitution_coefficient>0</restitution_coefficient>
+            <threshold>1e+06</threshold>
+          </bounce>
+          <contact>
+            <collide_without_contact>0</collide_without_contact>
+            <collide_without_contact_bitmask>1</collide_without_contact_bitmask>
+            <collide_bitmask>1</collide_bitmask>
+            <ode>
+              <soft_cfm>0</soft_cfm>
+              <soft_erp>0.2</soft_erp>
+              <kp>1e+13</kp>
+              <kd>1</kd>
+              <max_vel>0.0</max_vel>
+              <min_depth>0</min_depth>
+            </ode>
+            <bullet>
+              <split_impulse>1</split_impulse>
+              <split_impulse_penetration_threshold>-0.01</split_impulse_penetration_threshold>
+              <soft_cfm>0</soft_cfm>
+              <soft_erp>0.2</soft_erp>
+              <kp>1e+13</kp>
+              <kd>1</kd>
+            </bullet>
+          </contact>
+        </surface>
+      </collision>
+      <sensor name="wall01_sensor" type="contact">
+        <update_rate>10.0</update_rate>
+        <contact>
+          <!-- These collision names need to match the names used in the generated -->
+          <!-- SDF, not the urdf names or this still won't work! -->
+          <collision>wall1_collision</collision>
+        </contact>
+        <plugin name="bumper_plugin01" filename="libgazebo_ros_bumper.so">
+          <ros>
+            <namespace>walls</namespace>
+            <remapping>bumper_states:=contacts01</remapping>
+          </ros>
+        </plugin>
+      </sensor>
+    </link>
+    <link name='wall2'>
+      <pose>-9.5 0 0.5 0 -0 0</pose>
+      <inertial>
+        <pose>0 0 0 0 -0 0</pose>
+        <mass>108.71</mass>
+        <inertia>
+          <ixx>3873.9</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>18.1183</iyy>
+          <iyz>0</iyz>
+          <izz>3873.9</izz>
+        </inertia>
+      </inertial>
+      <self_collide>0</self_collide>
+      <enable_wind>0</enable_wind>
+      <kinematic>0</kinematic>
+      <visual name='wall2_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <box>
+            <size>1 40.0 1</size>
+          </box>
+        </geometry>
+        <material>
+          <shader type='pixel'/>
+        </material>
+        <transparency>0</transparency>
+        <cast_shadows>1</cast_shadows>
+      </visual>
+      <collision name='wall2_collision'>
+        <laser_retro>0</laser_retro>
+        <max_contacts>10</max_contacts>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <box>
+            <size>1 40.0 1</size>
+          </box>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>1</mu>
+              <mu2>1</mu2>
+              <fdir1>0 0 0</fdir1>
+              <slip1>0</slip1>
+              <slip2>0</slip2>
+            </ode>
+            <torsional>
+              <coefficient>1</coefficient>
+              <patch_radius>0</patch_radius>
+              <surface_radius>0</surface_radius>
+              <use_patch_radius>1</use_patch_radius>
+              <ode>
+                <slip>0</slip>
+              </ode>
+            </torsional>
+          </friction>
+          <bounce>
+            <restitution_coefficient>0</restitution_coefficient>
+            <threshold>1e+06</threshold>
+          </bounce>
+          <contact>
+            <collide_without_contact>0</collide_without_contact>
+            <collide_without_contact_bitmask>1</collide_without_contact_bitmask>
+            <collide_bitmask>1</collide_bitmask>
+            <ode>
+              <soft_cfm>0</soft_cfm>
+              <soft_erp>0.2</soft_erp>
+              <kp>1e+13</kp>
+              <kd>1</kd>
+              <max_vel>0.01</max_vel>
+              <min_depth>0</min_depth>
+            </ode>
+            <bullet>
+              <split_impulse>1</split_impulse>
+              <split_impulse_penetration_threshold>-0.01</split_impulse_penetration_threshold>
+              <soft_cfm>0</soft_cfm>
+              <soft_erp>0.2</soft_erp>
+              <kp>1e+13</kp>
+              <kd>1</kd>
+            </bullet>
+          </contact>
+        </surface>
+      </collision>
+      <sensor name="wall02_sensor" type="contact">
+        <update_rate>10.0</update_rate>
+        <contact>
+          <!-- These collision names need to match the names used in the generated -->
+          <!-- SDF, not the urdf names or this still won't work! -->
+          <collision>wall2_collision</collision>
+        </contact>
+        <plugin name="bumper_plugin02" filename="libgazebo_ros_bumper.so">
+          <ros>
+            <namespace>walls</namespace>
+            <remapping>bumper_states:=contacts02</remapping>
+          </ros>
+        </plugin>
+      </sensor>
+    </link>
+    <link name='wall3'>
+      <pose>0 19.5 0.5 0 -0 0</pose>
+      <inertial>
+        <pose>0 0 0 0 -0 0</pose>
+        <mass>84.5982</mass>
+        <inertia>
+          <ixx>14.0997</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1828.37</iyy>
+          <iyz>0</iyz>
+          <izz>1828.37</izz>
+        </inertia>
+      </inertial>
+      <self_collide>0</self_collide>
+      <enable_wind>0</enable_wind>
+      <kinematic>0</kinematic>
+      <visual name='visual_up_chamfer'>
+        <pose>-8.5 -1 0 0 0 0.785398</pose>
+        <geometry>
+          <box>
+            <size>3 1 1</size>
+          </box>
+        </geometry>
+        <transparency>0</transparency>
+        <cast_shadows>1</cast_shadows>
+      </visual>
+      <visual name='visual_down_chamfer'>
+        <pose>8.5 -1 0 0 0 -0.785398</pose>
+        <geometry>
+          <box>
+            <size>3 1 1</size>
+          </box>
+        </geometry>
+        <transparency>0</transparency>
+        <cast_shadows>1</cast_shadows>
+      </visual>
+      <collision name='collision_up_chamfer'>
+        <laser_retro>0</laser_retro>
+        <max_contacts>10</max_contacts>
+        <pose>-8.5 -1 0 0 0 0.785398</pose>
+        <geometry>
+          <box>
+            <size>3 1 1</size>
+          </box>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>1</mu>
+              <mu2>1</mu2>
+              <fdir1>0 0 0</fdir1>
+              <slip1>0</slip1>
+              <slip2>0</slip2>
+            </ode>
+            <torsional>
+              <coefficient>1</coefficient>
+              <patch_radius>0</patch_radius>
+              <surface_radius>0</surface_radius>
+              <use_patch_radius>1</use_patch_radius>
+              <ode>
+                <slip>0</slip>
+              </ode>
+            </torsional>
+          </friction>
+          <bounce>
+            <restitution_coefficient>0</restitution_coefficient>
+            <threshold>1e+06</threshold>
+          </bounce>
+          <contact>
+            <collide_without_contact>0</collide_without_contact>
+            <collide_without_contact_bitmask>1</collide_without_contact_bitmask>
+            <collide_bitmask>1</collide_bitmask>
+            <ode>
+              <soft_cfm>0</soft_cfm>
+              <soft_erp>0.2</soft_erp>
+              <kp>1e+13</kp>
+              <kd>1</kd>
+              <max_vel>0.01</max_vel>
+              <min_depth>0</min_depth>
+            </ode>
+            <bullet>
+              <split_impulse>1</split_impulse>
+              <split_impulse_penetration_threshold>-0.01</split_impulse_penetration_threshold>
+              <soft_cfm>0</soft_cfm>
+              <soft_erp>0.2</soft_erp>
+              <kp>1e+13</kp>
+              <kd>1</kd>
+            </bullet>
+          </contact>
+        </surface>
+      </collision>
+      <collision name='collision_down_chamfer'>
+        <laser_retro>0</laser_retro>
+        <max_contacts>10</max_contacts>
+        <pose>8.5 -1 0 0 0 -0.785398</pose>
+        <geometry>
+          <box>
+            <size>3 1 1</size>
+          </box>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>1</mu>
+              <mu2>1</mu2>
+              <fdir1>0 0 0</fdir1>
+              <slip1>0</slip1>
+              <slip2>0</slip2>
+            </ode>
+            <torsional>
+              <coefficient>1</coefficient>
+              <patch_radius>0</patch_radius>
+              <surface_radius>0</surface_radius>
+              <use_patch_radius>1</use_patch_radius>
+              <ode>
+                <slip>0</slip>
+              </ode>
+            </torsional>
+          </friction>
+          <bounce>
+            <restitution_coefficient>0</restitution_coefficient>
+            <threshold>1e+06</threshold>
+          </bounce>
+          <contact>
+            <collide_without_contact>0</collide_without_contact>
+            <collide_without_contact_bitmask>1</collide_without_contact_bitmask>
+            <collide_bitmask>1</collide_bitmask>
+            <ode>
+              <soft_cfm>0</soft_cfm>
+              <soft_erp>0.2</soft_erp>
+              <kp>1e+13</kp>
+              <kd>1</kd>
+              <max_vel>0.01</max_vel>
+              <min_depth>0</min_depth>
+            </ode>
+            <bullet>
+              <split_impulse>1</split_impulse>
+              <split_impulse_penetration_threshold>-0.01</split_impulse_penetration_threshold>
+              <soft_cfm>0</soft_cfm>
+              <soft_erp>0.2</soft_erp>
+              <kp>1e+13</kp>
+              <kd>1</kd>
+            </bullet>
+          </contact>
+        </surface>
+      </collision>
+
+      <visual name='wall3_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <box>
+            <size>20.0 1 1</size>
+          </box>
+        </geometry>
+        <material>
+          <shader type='pixel'/>
+        </material>
+        <transparency>0</transparency>
+        <cast_shadows>1</cast_shadows>
+      </visual>
+      <collision name='wall3_collision'>
+        <laser_retro>0</laser_retro>
+        <max_contacts>10</max_contacts>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <box>
+            <size>16.0 1 1</size>
+          </box>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>1</mu>
+              <mu2>1</mu2>
+              <fdir1>0 0 0</fdir1>
+              <slip1>0</slip1>
+              <slip2>0</slip2>
+            </ode>
+            <torsional>
+              <coefficient>1</coefficient>
+              <patch_radius>0</patch_radius>
+              <surface_radius>0</surface_radius>
+              <use_patch_radius>1</use_patch_radius>
+              <ode>
+                <slip>0</slip>
+              </ode>
+            </torsional>
+          </friction>
+          <bounce>
+            <restitution_coefficient>0</restitution_coefficient>
+            <threshold>1e+06</threshold>
+          </bounce>
+          <contact>
+            <collide_without_contact>0</collide_without_contact>
+            <collide_without_contact_bitmask>1</collide_without_contact_bitmask>
+            <collide_bitmask>1</collide_bitmask>
+            <ode>
+              <soft_cfm>0</soft_cfm>
+              <soft_erp>0.2</soft_erp>
+              <kp>1e+13</kp>
+              <kd>1</kd>
+              <max_vel>0.01</max_vel>
+              <min_depth>0</min_depth>
+            </ode>
+            <bullet>
+              <split_impulse>1</split_impulse>
+              <split_impulse_penetration_threshold>-0.01</split_impulse_penetration_threshold>
+              <soft_cfm>0</soft_cfm>
+              <soft_erp>0.2</soft_erp>
+              <kp>1e+13</kp>
+              <kd>1</kd>
+            </bullet>
+          </contact>
+        </surface>
+      </collision>
+      <sensor name="wall03_sensor" type="contact">
+        <update_rate>10.0</update_rate>
+        <contact>
+          <!-- These collision names need to match the names used in the generated -->
+          <!-- SDF, not the urdf names or this still won't work! -->
+          <collision>wall3_collision</collision>
+        </contact>
+        <plugin name="bumper_plugin03" filename="libgazebo_ros_bumper.so">
+          <ros>
+            <namespace>walls</namespace>
+            <remapping>bumper_states:=contacts03</remapping>
+          </ros>
+        </plugin>
+      </sensor>
+    </link>
+    <link name='wall4'>
+      <pose>-0 -19.5 0.5 0 -0 0</pose>
+      <inertial>
+        <pose>0 0 0 0 -0 0</pose>
+        <mass>100</mass>
+        <inertia>
+          <ixx>10</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>10</iyy>
+          <iyz>0</iyz>
+          <izz>10</izz>
+        </inertia>
+      </inertial>
+      <self_collide>0</self_collide>
+      <enable_wind>0</enable_wind>
+      <kinematic>0</kinematic>
+      <visual name='wall4_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <box>
+            <size>20 1 1</size>
+          </box>
+        </geometry>
+        <material>
+          <shader type='pixel'/>
+        </material>
+        <transparency>0</transparency>
+        <cast_shadows>1</cast_shadows>
+      </visual>
+      <collision name='wall4_collision'>
+        <laser_retro>0</laser_retro>
+        <max_contacts>10</max_contacts>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <box>
+            <size>20 1 1</size>
+          </box>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>1</mu>
+              <mu2>1</mu2>
+              <fdir1>0 0 0</fdir1>
+              <slip1>0</slip1>
+              <slip2>0</slip2>
+            </ode>
+            <torsional>
+              <coefficient>1</coefficient>
+              <patch_radius>0</patch_radius>
+              <surface_radius>0</surface_radius>
+              <use_patch_radius>1</use_patch_radius>
+              <ode>
+                <slip>0</slip>
+              </ode>
+            </torsional>
+          </friction>
+          <bounce>
+            <restitution_coefficient>0</restitution_coefficient>
+            <threshold>1e+06</threshold>
+          </bounce>
+          <contact>
+            <collide_without_contact>0</collide_without_contact>
+            <collide_without_contact_bitmask>1</collide_without_contact_bitmask>
+            <collide_bitmask>1</collide_bitmask>
+            <ode>
+              <soft_cfm>0</soft_cfm>
+              <soft_erp>0.2</soft_erp>
+              <kp>1e+13</kp>
+              <kd>1</kd>
+              <max_vel>0.01</max_vel>
+              <min_depth>0</min_depth>
+            </ode>
+            <bullet>
+              <split_impulse>1</split_impulse>
+              <split_impulse_penetration_threshold>-0.01</split_impulse_penetration_threshold>
+              <soft_cfm>0</soft_cfm>
+              <soft_erp>0.2</soft_erp>
+              <kp>1e+13</kp>
+              <kd>1</kd>
+            </bullet>
+          </contact>
+        </surface>
+      </collision>
+      <sensor name="wall04_sensor" type="contact">
+        <update_rate>10.0</update_rate>
+        <contact>
+          <!-- These collision names need to match the names used in the generated -->
+          <!-- SDF, not the urdf names or this still won't work! -->
+          <collision>wall4_collision</collision>
+        </contact>
+        <plugin name="bumper_plugin04" filename="libgazebo_ros_bumper.so">
+          <ros>
+            <namespace>walls</namespace>
+            <remapping>bumper_states:=contacts04</remapping>
+          </ros>
+        </plugin>
+      </sensor>
+    </link>
+
+    <joint name='floor_to_wall1' type='fixed'>
+      <parent>floor</parent>
+      <child>wall1</child>
+      <pose>0 0.5 -0.5 0 -0 0</pose>
+      <physics>
+        <ode>
+          <limit>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </limit>
+          <suspension>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </suspension>
+        </ode>
+      </physics>
+    </joint>
+    <joint name='floor_to_wall2' type='fixed'>
+      <parent>floor</parent>
+      <child>wall2</child>
+      <pose>0 0 0 0 -0 0</pose>
+      <physics>
+        <ode>
+          <limit>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </limit>
+          <suspension>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </suspension>
+        </ode>
+      </physics>
+    </joint>
+    <joint name='floor_to_wall3' type='fixed'>
+      <parent>floor</parent>
+      <child>wall3</child>
+      <pose>0 0 0 0 -0 0</pose>
+      <physics>
+        <ode>
+          <limit>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </limit>
+          <suspension>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </suspension>
+        </ode>
+      </physics>
+    </joint>
+    <joint name='floor_to_wall4' type='fixed'>
+      <parent>floor</parent>
+      <child>wall4</child>
+      <pose>0 0 0 0 -0 0</pose>
+      <physics>
+        <ode>
+          <limit>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </limit>
+          <suspension>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </suspension>
+        </ode>
+      </physics>
+    </joint>
+
+    <link name='link_0'>
+      <inertial>
+        <mass>113.927</mass>
+        <inertia>
+          <ixx>492.597</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>2431.19</iyy>
+          <iyz>0</iyz>
+          <izz>2904.8</izz>
+        </inertia>
+        <pose>0 0 0 0 -0 0</pose>
+      </inertial>
+      <pose>${link0_pos_x} ${link0_pos_y} 0.49 0 -0 0</pose>
+      <gravity>1</gravity>
+      <self_collide>0</self_collide>
+      <kinematic>0</kinematic>
+      <enable_wind>0</enable_wind>
+      <visual name='visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <box>
+            <size>${link0_w} 1 1</size>
+          </box>
+        </geometry>
+
+        <transparency>0</transparency>
+        <cast_shadows>1</cast_shadows>
+      </visual>
+      <collision name='collision0'>
+        <laser_retro>0</laser_retro>
+        <max_contacts>10</max_contacts>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <box>
+            <size>${link0_w} 1 1</size>
+          </box>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>1</mu>
+              <mu2>1</mu2>
+              <fdir1>0 0 0</fdir1>
+              <slip1>0</slip1>
+              <slip2>0</slip2>
+            </ode>
+            <torsional>
+              <coefficient>1</coefficient>
+              <patch_radius>0</patch_radius>
+              <surface_radius>0</surface_radius>
+              <use_patch_radius>1</use_patch_radius>
+              <ode>
+                <slip>0</slip>
+              </ode>
+            </torsional>
+          </friction>
+          <bounce>
+            <restitution_coefficient>0</restitution_coefficient>
+            <threshold>1e+06</threshold>
+          </bounce>
+          <contact>
+            <collide_without_contact>0</collide_without_contact>
+            <collide_without_contact_bitmask>1</collide_without_contact_bitmask>
+            <collide_bitmask>1</collide_bitmask>
+            <ode>
+              <soft_cfm>0</soft_cfm>
+              <soft_erp>0.2</soft_erp>
+              <kp>1e+13</kp>
+              <kd>1</kd>
+              <max_vel>0.01</max_vel>
+              <min_depth>0</min_depth>
+            </ode>
+            <bullet>
+              <split_impulse>1</split_impulse>
+              <split_impulse_penetration_threshold>-0.01</split_impulse_penetration_threshold>
+              <soft_cfm>0</soft_cfm>
+              <soft_erp>0.2</soft_erp>
+              <kp>1e+13</kp>
+              <kd>1</kd>
+            </bullet>
+          </contact>
+        </surface>
+      </collision>
+      <sensor name="wall0_sensor" type="contact">
+        <update_rate>10.0</update_rate>
+        <contact>
+          <collision>collision0</collision>
+        </contact>
+        <plugin name="bumper_plugin0" filename="libgazebo_ros_bumper.so">
+          <ros>
+            <namespace>walls</namespace>
+            <remapping>bumper_states:=contacts0</remapping>
+          </ros>
+        </plugin>
+      </sensor>
+    </link>
+    <link name='link_11'>
+      <inertial>
+        <mass>136.541</mass>
+        <inertia>
+          <ixx>870.287</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>2821.65</iyy>
+          <iyz>0</iyz>
+          <izz>3669.18</izz>
+        </inertia>
+        <pose>0 0 0 0 -0 0</pose>
+      </inertial>
+      <pose>${link11_pos_x} ${link11_pos_y} 0.49 0 -0 0</pose>
+      <visual name='visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <box>
+            <size>${link11_w} 1 1</size>
+          </box>
+        </geometry>
+        <transparency>0</transparency>
+        <cast_shadows>1</cast_shadows>
+      </visual>
+      <collision name='collision11'>
+        <laser_retro>0</laser_retro>
+        <max_contacts>10</max_contacts>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <box>
+            <size>${link11_w} 1 1</size>
+          </box>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>1</mu>
+              <mu2>1</mu2>
+              <fdir1>0 0 0</fdir1>
+              <slip1>0</slip1>
+              <slip2>0</slip2>
+            </ode>
+            <torsional>
+              <coefficient>1</coefficient>
+              <patch_radius>0</patch_radius>
+              <surface_radius>0</surface_radius>
+              <use_patch_radius>1</use_patch_radius>
+              <ode>
+                <slip>0</slip>
+              </ode>
+            </torsional>
+          </friction>
+          <bounce>
+            <restitution_coefficient>0</restitution_coefficient>
+            <threshold>1e+06</threshold>
+          </bounce>
+          <contact>
+            <collide_without_contact>0</collide_without_contact>
+            <collide_without_contact_bitmask>1</collide_without_contact_bitmask>
+            <collide_bitmask>1</collide_bitmask>
+            <ode>
+              <soft_cfm>0</soft_cfm>
+              <soft_erp>0.2</soft_erp>
+              <kp>1e+13</kp>
+              <kd>1</kd>
+              <max_vel>0.01</max_vel>
+              <min_depth>0</min_depth>
+            </ode>
+            <bullet>
+              <split_impulse>1</split_impulse>
+              <split_impulse_penetration_threshold>-0.01</split_impulse_penetration_threshold>
+              <soft_cfm>0</soft_cfm>
+              <soft_erp>0.2</soft_erp>
+              <kp>1e+13</kp>
+              <kd>1</kd>
+            </bullet>
+          </contact>
+        </surface>
+      </collision>
+      <sensor name="wall11_sensor" type="contact">
+        <update_rate>10.0</update_rate>
+        <contact>
+          <collision>collision11</collision>
+        </contact>
+        <plugin name="bumper_plugin11" filename="libgazebo_ros_bumper.so">
+          <ros>
+            <namespace>walls</namespace>
+            <remapping>bumper_states:=contacts11</remapping>
+          </ros>
+        </plugin>
+      </sensor>
+    </link>
+    <link name='link_12'>
+      <inertial>
+        <mass>136.541</mass>
+        <inertia>
+          <ixx>870.287</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>2821.65</iyy>
+          <iyz>0</iyz>
+          <izz>3669.18</izz>
+        </inertia>
+        <pose>0 0 0 0 -0 0</pose>
+      </inertial>
+      <pose>${link12_pos_x} ${link12_pos_y} 0.49 0 -0 0</pose>
+      <visual name='visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <box>
+            <size>${link12_w} 1 1</size>
+          </box>
+        </geometry>
+        <transparency>0</transparency>
+        <cast_shadows>1</cast_shadows>
+      </visual>
+      <collision name='collision12'>
+        <laser_retro>0</laser_retro>
+        <max_contacts>10</max_contacts>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <box>
+            <size>${link12_w} 1 1</size>
+          </box>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>1</mu>
+              <mu2>1</mu2>
+              <fdir1>0 0 0</fdir1>
+              <slip1>0</slip1>
+              <slip2>0</slip2>
+            </ode>
+            <torsional>
+              <coefficient>1</coefficient>
+              <patch_radius>0</patch_radius>
+              <surface_radius>0</surface_radius>
+              <use_patch_radius>1</use_patch_radius>
+              <ode>
+                <slip>0</slip>
+              </ode>
+            </torsional>
+          </friction>
+          <bounce>
+            <restitution_coefficient>0</restitution_coefficient>
+            <threshold>1e+06</threshold>
+          </bounce>
+          <contact>
+            <collide_without_contact>0</collide_without_contact>
+            <collide_without_contact_bitmask>1</collide_without_contact_bitmask>
+            <collide_bitmask>1</collide_bitmask>
+            <ode>
+              <soft_cfm>0</soft_cfm>
+              <soft_erp>0.2</soft_erp>
+              <kp>1e+13</kp>
+              <kd>1</kd>
+              <max_vel>0.01</max_vel>
+              <min_depth>0</min_depth>
+            </ode>
+            <bullet>
+              <split_impulse>1</split_impulse>
+              <split_impulse_penetration_threshold>-0.01</split_impulse_penetration_threshold>
+              <soft_cfm>0</soft_cfm>
+              <soft_erp>0.2</soft_erp>
+              <kp>1e+13</kp>
+              <kd>1</kd>
+            </bullet>
+          </contact>
+        </surface>
+      </collision>
+      <sensor name="wall12_sensor" type="contact">
+        <update_rate>10.0</update_rate>
+        <contact>
+          <collision>collision12</collision>
+        </contact>
+        <plugin name="bumper_plugin12" filename="libgazebo_ros_bumper.so">
+          <ros>
+            <namespace>walls</namespace>
+            <remapping>bumper_states:=contacts12</remapping>
+          </ros>
+        </plugin>
+      </sensor>
+    </link>
+    <link name='link_2'>
+      <inertial>
+        <mass>136.541</mass>
+        <inertia>
+          <ixx>870.287</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>2821.65</iyy>
+          <iyz>0</iyz>
+          <izz>3669.18</izz>
+        </inertia>
+        <pose>0 0 0 0 -0 0</pose>
+      </inertial>
+      <pose>${link2_pos_x} ${link2_pos_y} 0.49 0 -0 0</pose>
+      <visual name='visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <box>
+            <size>${link2_w} 1 1</size>
+          </box>
+        </geometry>
+        <transparency>0</transparency>
+        <cast_shadows>1</cast_shadows>
+      </visual>
+      <collision name='collision2'>
+        <laser_retro>0</laser_retro>
+        <max_contacts>10</max_contacts>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <box>
+            <size>${link2_w} 1 1</size>
+          </box>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>1</mu>
+              <mu2>1</mu2>
+              <fdir1>0 0 0</fdir1>
+              <slip1>0</slip1>
+              <slip2>0</slip2>
+            </ode>
+            <torsional>
+              <coefficient>1</coefficient>
+              <patch_radius>0</patch_radius>
+              <surface_radius>0</surface_radius>
+              <use_patch_radius>1</use_patch_radius>
+              <ode>
+                <slip>0</slip>
+              </ode>
+            </torsional>
+          </friction>
+          <bounce>
+            <restitution_coefficient>0</restitution_coefficient>
+            <threshold>1e+06</threshold>
+          </bounce>
+          <contact>
+            <collide_without_contact>0</collide_without_contact>
+            <collide_without_contact_bitmask>1</collide_without_contact_bitmask>
+            <collide_bitmask>1</collide_bitmask>
+            <ode>
+              <soft_cfm>0</soft_cfm>
+              <soft_erp>0.2</soft_erp>
+              <kp>1e+13</kp>
+              <kd>1</kd>
+              <max_vel>0.01</max_vel>
+              <min_depth>0</min_depth>
+            </ode>
+            <bullet>
+              <split_impulse>1</split_impulse>
+              <split_impulse_penetration_threshold>-0.01</split_impulse_penetration_threshold>
+              <soft_cfm>0</soft_cfm>
+              <soft_erp>0.2</soft_erp>
+              <kp>1e+13</kp>
+              <kd>1</kd>
+            </bullet>
+          </contact>
+        </surface>
+      </collision>
+      <sensor name="wall2_sensor" type="contact">
+        <update_rate>10.0</update_rate>
+        <contact>
+          <collision>collision2</collision>
+        </contact>
+        <plugin name="bumper_plugin2" filename="libgazebo_ros_bumper.so">
+          <ros>
+            <namespace>walls</namespace>
+            <remapping>bumper_states:=contacts2</remapping>
+          </ros>
+        </plugin>
+      </sensor>
+    </link>
+    <link name='link_31'>
+      <inertial>
+        <mass>136.541</mass>
+        <inertia>
+          <ixx>870.287</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>2821.65</iyy>
+          <iyz>0</iyz>
+          <izz>3669.18</izz>
+        </inertia>
+        <pose>0 0 0 0 -0 0</pose>
+      </inertial>
+      <pose>${link31_pos_x} ${link31_pos_y} 0.49 0 -0 0</pose>
+      <visual name='visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <box>
+            <size>${link31_w} 1 1</size>
+          </box>
+        </geometry>
+        <transparency>0</transparency>
+        <cast_shadows>1</cast_shadows>
+      </visual>
+      <collision name='collision31'>
+        <laser_retro>0</laser_retro>
+        <max_contacts>10</max_contacts>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <box>
+            <size>${link31_w} 1 1</size>
+          </box>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>1</mu>
+              <mu2>1</mu2>
+              <fdir1>0 0 0</fdir1>
+              <slip1>0</slip1>
+              <slip2>0</slip2>
+            </ode>
+            <torsional>
+              <coefficient>1</coefficient>
+              <patch_radius>0</patch_radius>
+              <surface_radius>0</surface_radius>
+              <use_patch_radius>1</use_patch_radius>
+              <ode>
+                <slip>0</slip>
+              </ode>
+            </torsional>
+          </friction>
+          <bounce>
+            <restitution_coefficient>0</restitution_coefficient>
+            <threshold>1e+06</threshold>
+          </bounce>
+          <contact>
+            <collide_without_contact>0</collide_without_contact>
+            <collide_without_contact_bitmask>1</collide_without_contact_bitmask>
+            <collide_bitmask>1</collide_bitmask>
+            <ode>
+              <soft_cfm>0</soft_cfm>
+              <soft_erp>0.2</soft_erp>
+              <kp>1e+13</kp>
+              <kd>1</kd>
+              <max_vel>0.01</max_vel>
+              <min_depth>0</min_depth>
+            </ode>
+            <bullet>
+              <split_impulse>1</split_impulse>
+              <split_impulse_penetration_threshold>-0.01</split_impulse_penetration_threshold>
+              <soft_cfm>0</soft_cfm>
+              <soft_erp>0.2</soft_erp>
+              <kp>1e+13</kp>
+              <kd>1</kd>
+            </bullet>
+          </contact>
+        </surface>
+      </collision>
+      <sensor name="wall31_sensor" type="contact">
+        <update_rate>10.0</update_rate>
+        <contact>
+          <collision>collision31</collision>
+        </contact>
+        <plugin name="bumper_plugin31" filename="libgazebo_ros_bumper.so">
+          <ros>
+            <namespace>walls</namespace>
+            <remapping>bumper_states:=contacts31</remapping>
+          </ros>
+        </plugin>
+      </sensor>
+    </link>
+    <link name='link_32'>
+      <inertial>
+        <mass>136.541</mass>
+        <inertia>
+          <ixx>870.287</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>2821.65</iyy>
+          <iyz>0</iyz>
+          <izz>3669.18</izz>
+        </inertia>
+        <pose>0 0 0 0 -0 0</pose>
+      </inertial>
+      <pose>${link32_pos_x} ${link32_pos_y} 0.49 0 -0 0</pose>
+      <visual name='visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <box>
+            <size>${link32_w} 1 1</size>
+          </box>
+        </geometry>
+        <transparency>0</transparency>
+        <cast_shadows>1</cast_shadows>
+      </visual>
+      <collision name='collision32'>
+        <laser_retro>0</laser_retro>
+        <max_contacts>10</max_contacts>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <box>
+            <size>${link32_w} 1 1</size>
+          </box>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>1</mu>
+              <mu2>1</mu2>
+              <fdir1>0 0 0</fdir1>
+              <slip1>0</slip1>
+              <slip2>0</slip2>
+            </ode>
+            <torsional>
+              <coefficient>1</coefficient>
+              <patch_radius>0</patch_radius>
+              <surface_radius>0</surface_radius>
+              <use_patch_radius>1</use_patch_radius>
+              <ode>
+                <slip>0</slip>
+              </ode>
+            </torsional>
+          </friction>
+          <bounce>
+            <restitution_coefficient>0</restitution_coefficient>
+            <threshold>1e+06</threshold>
+          </bounce>
+          <contact>
+            <collide_without_contact>0</collide_without_contact>
+            <collide_without_contact_bitmask>1</collide_without_contact_bitmask>
+            <collide_bitmask>1</collide_bitmask>
+            <ode>
+              <soft_cfm>0</soft_cfm>
+              <soft_erp>0.2</soft_erp>
+              <kp>1e+13</kp>
+              <kd>1</kd>
+              <max_vel>0.01</max_vel>
+              <min_depth>0</min_depth>
+            </ode>
+            <bullet>
+              <split_impulse>1</split_impulse>
+              <split_impulse_penetration_threshold>-0.01</split_impulse_penetration_threshold>
+              <soft_cfm>0</soft_cfm>
+              <soft_erp>0.2</soft_erp>
+              <kp>1e+13</kp>
+              <kd>1</kd>
+            </bullet>
+          </contact>
+        </surface>
+      </collision>
+      <sensor name="wall32_sensor" type="contact">
+        <update_rate>10.0</update_rate>
+        <contact>
+          <collision>collision32</collision>
+        </contact>
+        <plugin name="bumper_plugin32" filename="libgazebo_ros_bumper.so">
+          <ros>
+            <namespace>walls</namespace>
+            <remapping>bumper_states:=contacts32</remapping>
+          </ros>
+        </plugin>
+      </sensor>
+    </link>
+    <link name='link_4'>
+      <inertial>
+        <mass>136.541</mass>
+        <inertia>
+          <ixx>870.287</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>2821.65</iyy>
+          <iyz>0</iyz>
+          <izz>3669.18</izz>
+        </inertia>
+        <pose>0 0 0 0 -0 0</pose>
+      </inertial>
+      <pose>${link4_pos_x} ${link4_pos_y} 0.49 0 -0 0</pose>
+      <visual name='visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <box>
+            <size>${link4_w} 1 1</size>
+          </box>
+        </geometry>
+        <transparency>0</transparency>
+        <cast_shadows>1</cast_shadows>
+      </visual>
+      <collision name='collision4'>
+        <laser_retro>0</laser_retro>
+        <max_contacts>10</max_contacts>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <box>
+            <size>${link4_w} 1 1</size>
+          </box>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>1</mu>
+              <mu2>1</mu2>
+              <fdir1>0 0 0</fdir1>
+              <slip1>0</slip1>
+              <slip2>0</slip2>
+            </ode>
+            <torsional>
+              <coefficient>1</coefficient>
+              <patch_radius>0</patch_radius>
+              <surface_radius>0</surface_radius>
+              <use_patch_radius>1</use_patch_radius>
+              <ode>
+                <slip>0</slip>
+              </ode>
+            </torsional>
+          </friction>
+          <bounce>
+            <restitution_coefficient>0</restitution_coefficient>
+            <threshold>1e+06</threshold>
+          </bounce>
+          <contact>
+            <collide_without_contact>0</collide_without_contact>
+            <collide_without_contact_bitmask>1</collide_without_contact_bitmask>
+            <collide_bitmask>1</collide_bitmask>
+            <ode>
+              <soft_cfm>0</soft_cfm>
+              <soft_erp>0.2</soft_erp>
+              <kp>1e+13</kp>
+              <kd>1</kd>
+              <max_vel>0.01</max_vel>
+              <min_depth>0</min_depth>
+            </ode>
+            <bullet>
+              <split_impulse>1</split_impulse>
+              <split_impulse_penetration_threshold>-0.01</split_impulse_penetration_threshold>
+              <soft_cfm>0</soft_cfm>
+              <soft_erp>0.2</soft_erp>
+              <kp>1e+13</kp>
+              <kd>1</kd>
+            </bullet>
+          </contact>
+        </surface>
+      </collision>
+      <sensor name="wall4_sensor" type="contact">
+        <update_rate>10.0</update_rate>
+        <contact>
+          <collision>collision4</collision>
+        </contact>
+        <plugin name="bumper_plugin4" filename="libgazebo_ros_bumper.so">
+          <ros>
+            <namespace>walls</namespace>
+            <remapping>bumper_states:=contacts4</remapping>
+          </ros>
+        </plugin>
+      </sensor>
+    </link>
+
+    <joint name='floor_to_link_0' type='fixed'>
+      <parent>floor</parent>
+      <child>link_0</child>
+      <pose>0 0 0 0 -0 0</pose>
+      <physics>
+        <ode>
+          <limit>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </limit>
+          <suspension>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </suspension>
+        </ode>
+      </physics>
+    </joint>
+    <joint name='floor_to_link_11' type='fixed'>
+      <parent>floor</parent>
+      <child>link_11</child>
+      <pose>0 0 0 0 -0 0</pose>
+      <physics>
+        <ode>
+          <limit>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </limit>
+          <suspension>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </suspension>
+        </ode>
+      </physics>
+    </joint>
+    <joint name='floor_to_link_12' type='fixed'>
+      <parent>floor</parent>
+      <child>link_12</child>
+      <pose>0 0 0 0 -0 0</pose>
+      <physics>
+        <ode>
+          <limit>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </limit>
+          <suspension>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </suspension>
+        </ode>
+      </physics>
+    </joint>
+    <joint name='floor_to_link_2' type='fixed'>
+      <parent>floor</parent>
+      <child>link_2</child>
+      <pose>0 0 0 0 -0 0</pose>
+      <physics>
+        <ode>
+          <limit>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </limit>
+          <suspension>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </suspension>
+        </ode>
+      </physics>
+    </joint>
+    <joint name='floor_to_link_31' type='fixed'>
+      <parent>floor</parent>
+      <child>link_31</child>
+      <pose>0 0 0 0 -0 0</pose>
+      <physics>
+        <ode>
+          <limit>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </limit>
+          <suspension>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </suspension>
+        </ode>
+      </physics>
+    </joint>
+    <joint name='floor_to_link_32' type='fixed'>
+      <parent>floor</parent>
+      <child>link_32</child>
+      <pose>0 0 0 0 -0 0</pose>
+      <physics>
+        <ode>
+          <limit>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </limit>
+          <suspension>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </suspension>
+        </ode>
+      </physics>
+    </joint>
+    <joint name='floor_to_link_4' type='fixed'>
+      <parent>floor</parent>
+      <child>link_4</child>
+      <pose>0 0 0 0 -0 0</pose>
+      <physics>
+        <ode>
+          <limit>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </limit>
+          <suspension>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </suspension>
+        </ode>
+      </physics>
+    </joint>
+
+    <static>1</static>
+    <allow_auto_disable>1</allow_auto_disable>
+  </model>
+</sdf>
+
+</robot>
