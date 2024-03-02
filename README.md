@@ -1,2 +1,6 @@
-# autonomous-hovercraft-simulation
-A simulation project to test autonomous hovercraft
+# Autonomous Hovercraft Simulation
+A simulation project on Gazebo to test autonomous hovercraft. The simulation is on ROS2
+## Run the test 
+```
+ros2 launch 
+```
