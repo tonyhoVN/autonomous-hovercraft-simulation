@@ -11,5 +11,5 @@ cd .. & colcon build --packages-select hovercraft_simu
 
 ## Run
 ```
-ros2 launch hovercraft_simu start_final.launch
+ros2 launch hovercraft_simu start_final.launch.xml
 ```
