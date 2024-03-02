@@ -1,5 +1,7 @@
 # Autonomous Hovercraft Simulation
-A simulation project on Gazebo to test autonomous hovercraft. The simulation is runned on ROS2
+Simulation of autonomous hovercraft solving the maze. The algorithm includes dynamic motion control, lidar-based SLAM, and A-star path planning 
+
+<img src="media/maze.jpg" width="200">
 
 ## Installation 
 - navigate to your ros2 work space to clone the folder.
