@@ -6,10 +6,10 @@ A simulation project on Gazebo to test autonomous hovercraft. The simulation is 
 ```
 cd ~/ros2_ws/src
 git clone https://github.com/tonyhoVN/autonomous-hovercraft-simulation.git
-cd .. & colcon build --packages-select 
+cd .. & colcon build --packages-select hovercraft_simu
 ```
 
-## Run the test 
+## Run
 ```
-ros2 launch autonomous-hovercraft-simulation start_final.launch
+ros2 launch hovercraft_simu start_final.launch
 ```
