@@ -9,6 +9,7 @@ Simulation of autonomous hovercraft solving the maze. The simulation is runned o
 cd ~/ros2_ws/src
 git clone https://github.com/tonyhoVN/autonomous-hovercraft-simulation.git
 cd .. & colcon build --packages-select hovercraft_simu
+source install/local_setup.bash
 ```
 
 ## Run
